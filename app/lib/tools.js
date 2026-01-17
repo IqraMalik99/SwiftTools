@@ -72,13 +72,6 @@ export const tools = {
     accept: "image/*",
     type: "image",
   },
-  "background-remover": {
-    title: "Background Remover",
-    description: "Remove image backgrounds automatically.",
-    uploadLabel: "Select images or drop them here",
-    accept: "image/*",
-    type: "image",
-  },
   "image-resizer": {
     title: "Image Resizer",
     description: "Resize images to exact dimensions.",
@@ -281,7 +274,6 @@ export const CardiconMap = {
   "WebP to PNG": <ImageIcon size={18} className="text-blue-600" />,
 
   "Image Compressor": <Zap size={18} className="text-blue-600" />,
-  "Background Remover": <Settings size={18} className="text-blue-600" />,
   "Image Resizer": <Crop size={18} className="text-blue-600" />,
   "Bulk Image Resizer": <Crop size={18} className="text-blue-600" />,
   "Image Cropper": <Crop size={18} className="text-blue-600" />,
@@ -335,7 +327,6 @@ export const Cardsections = [
     subtitle: "Convert, compress and edit images instantly",
     tools: [
       { name: "Image Compressor", slug: "image-compressor", desc: "Reduce image size without quality loss" },
-      { name: "Background Remover", slug: "background-remover", desc: "Remove image backgrounds automatically" },
       { name: "Image Resizer", slug: "image-resizer", desc: "Resize images without distortion" },
       { name: "Bulk Image Resizer", slug: "bulk-image-resizer", desc: "Resize multiple images at once" },
       { name: "Image Cropper", slug: "image-cropper", desc: "Crop images freely or by aspect ratio" },
