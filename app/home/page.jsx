@@ -1,13 +1,14 @@
 "use client";
+import CardsPage from "../components/Cards";
 import Navbar from "../components/Navbar";
 
 export default function Home() {
   return (
-    <main className="min-h-screen ">
+    <main className="min-h-screen bg-linear-to-r from-[#f8f7ff] via-[#fff7f7] to-[#fffdf5]">
       <Navbar />
 
       {/* Hero */}
-      <section className="flex min-h-screen flex-col items-center justify-center px-4 text-center">
+      <section className="flex min-h-screen flex-col items-center justify-center px-4 text-center ">
         
         <span className="mb-6 rounded-full bg-white px-4 py-1 text-sm shadow">
           ✨ Introducing SwiftTools 1.0
@@ -49,6 +50,7 @@ export default function Home() {
         </div>
 
       </section>
+      <CardsPage />
     </main>
   );
 }

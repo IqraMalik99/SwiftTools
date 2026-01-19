@@ -5,6 +5,7 @@ import {
   ArrowRight
 } from "lucide-react";
 import { CardiconMap, Cardsections } from "../lib/tools";
+import Footer from "./Footer";
 
 /* ================= ICON MAP ================= */
 
@@ -18,7 +19,7 @@ const sections = Cardsections;
 
 export default function CardsPage() {
   return (
-    <div className="min-h-screen bg-linear-to-br from-[#f8f7ff] via-[#fff7f7] to-[#fffdf5]">
+    <div className="min-h-screen bg-linear-to-br">
       <div className="mx-auto max-w-7xl px-4 py-12">
         {sections.map((section) => (
           <section key={section.title} className="mb-14">
@@ -50,6 +51,7 @@ export default function CardsPage() {
           </section>
         ))}
       </div>
+      <Footer/>
     </div>
   );
 }

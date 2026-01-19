@@ -1,4 +1,4 @@
-export async function convertFile(
+export async function convertFileImage(
   file,
   slug,
   width = 0,
@@ -103,3 +103,38 @@ export async function convertFile(
   // For other endpoints, return the blob
   return await res.blob();
 }
+
+
+// app/lib/api.js
+export async function convertFilePdf(files, slug) {
+  if (!files || !files.length) throw new Error("No files provided");
+
+  const formData = new FormData();
+  files.forEach((file) => formData.append("files", file)); // append all files
+  formData.append("conversionType", slug);
+
+  // Your API endpoint
+let endpoint;
+if(slug == "pdf-merger"){
+    endpoint = "/api/pdf/merge";
+}else if(slug == "pdf-compressor"){
+ endpoint = "/api/pdf/compress";
+}else if (slug == "pdf-splitter"){
+     endpoint = "/api/pdf/split";
+}else if(slug == "pdf-to-image"){
+  endpoint = "/api/pdf/pdf-to-image";
+}else if(slug == "image-to-pdf"){
+  endpoint="/api/pdf/image-to-pdf";
+}
+
+  const res = await fetch(endpoint, {
+    method: "POST",
+    body: formData,
+  });
+
+  if (!res.ok) {
+    throw new Error("Conversion failed");
+  }
+  return res; // Return the Response object
+}
+

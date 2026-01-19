@@ -1,13 +1,12 @@
 "use client";
 
-import { useState, useCallback, use } from "react";
+import { useState, useCallback ,use } from "react";
 import Navbar from "../../components/Navbar";
-import { ImageIcon } from "lucide-react";
 import { tools } from "../../lib/tools";
-import { convertFile } from "../../lib/api";
+import { convertFileImage } from "../../lib/api";
 import Cropper from "react-easy-crop";
 import getCroppedImg from "../../lib/cropImage";
-
+import Footer from "../../components/Footer";
 export default function ToolDetailPage({ params }) {
   const { slug } = use(params);
   const detail = tools[slug];
@@ -15,36 +14,32 @@ export default function ToolDetailPage({ params }) {
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [previewUrls, setPreviewUrls] = useState([]);
   const [loading, setLoading] = useState(false);
-
   const [cropData, setCropData] = useState([]);
   const [cropWidth, setCropWidth] = useState(0);
   const [cropHeight, setCropHeight] = useState(0);
 
-  /* ===== WATERMARK STATES ===== */
   const [watermarkType, setWatermarkType] = useState("text");
   const [watermarkText, setWatermarkText] = useState("");
   const [watermarkLogo, setWatermarkLogo] = useState(null);
   const [watermarkPosition, setWatermarkPosition] = useState("bottom-right");
 
-  /* ===== EXIF DATA STATE ===== */
   const [exifData, setExifData] = useState(null);
 
   if (!detail || detail.type !== "image") {
     return (
-      <div className="min-h-screen flex items-center justify-center text-black text-sm">
+      <div className="min-h-screen flex items-center justify-center text-sm bg-white">
         Image tool not found
       </div>
     );
   }
 
-  function handleFileChange(e) {
+  const handleFileChange = (e) => {
     const files = Array.from(e.target.files);
     if (!files.length) return;
 
     setSelectedFiles(files);
     const urls = files.map((file) => URL.createObjectURL(file));
     setPreviewUrls(urls);
-
     setCropData(files.map(() => ({ crop: { x: 0, y: 0 }, zoom: 1 })));
 
     const img = new Image();
@@ -54,14 +49,13 @@ export default function ToolDetailPage({ params }) {
       setCropHeight(img.height);
     };
 
-    /* ===== READ EXIF IF slug === exif-metadata-remover ===== */
     if (slug === "exif-metadata-remover") {
       import("exifr").then(async (exifr) => {
         const data = await exifr.parse(files[0]);
         setExifData(data);
       });
     }
-  }
+  };
 
   const onCropComplete = useCallback(
     (index) => (_, croppedAreaPixels) => {
@@ -70,7 +64,6 @@ export default function ToolDetailPage({ params }) {
         newData[index].croppedAreaPixels = croppedAreaPixels;
         return newData;
       });
-
       if (index === 0 && croppedAreaPixels) {
         setCropWidth(Math.round(croppedAreaPixels.width));
         setCropHeight(Math.round(croppedAreaPixels.height));
@@ -79,171 +72,121 @@ export default function ToolDetailPage({ params }) {
     []
   );
 
-const handleConvert = async () => {
-  if (!selectedFiles.length) return alert("Please select images");
-
-  setLoading(true);
-  try {
-    const blobs = [];
-
-    for (let i = 0; i < selectedFiles.length; i++) {
-      let finalFile = selectedFiles[i];
-
-      // Crop/Resize logic remains intact
-      if (
-        ["image-cropper", "image-resizer", "bulk-image-resizer", "social-media-image-cropper"].includes(
-          slug
-        )
-      ) {
-        finalFile = await getCroppedImg(
-          previewUrls[i],
-          cropData[i].croppedAreaPixels,
-          cropWidth,
-          cropHeight,
-          slug
-        );
-      }
-
-      // Call convertFile
-      const result = await convertFile(finalFile, slug, cropWidth, cropHeight, {
-        watermarkType,
-        watermarkText,
-        watermarkLogo,
-        position: watermarkPosition,
-      });
-
-      // Only push to blobs if result is not null (favicon returns null)
-      if (result !== null) {
-        blobs.push(result);
-      }
-    }
-
-    // Download result for non-favicon tools
-    if (slug !== "favicon-generator") {
-      blobs.forEach((blob, i) => {
-        if (blob) { // Check blob exists
-          const url = URL.createObjectURL(blob);
-          const a = document.createElement("a");
-          a.href = url;
-          a.download = selectedFiles[i].name;
-          a.click();
-          URL.revokeObjectURL(url);
+  const handleConvert = async () => {
+    if (!selectedFiles.length) return alert("Please select images");
+    setLoading(true);
+    try {
+      const blobs = [];
+      for (let i = 0; i < selectedFiles.length; i++) {
+        let finalFile = selectedFiles[i];
+        if (
+          ["image-cropper", "image-resizer", "bulk-image-resizer", "social-media-image-cropper"].includes(
+            slug
+          )
+        ) {
+          finalFile = await getCroppedImg(
+            previewUrls[i],
+            cropData[i].croppedAreaPixels,
+            cropWidth,
+            cropHeight,
+            slug
+          );
         }
+        const result = await convertFileImage(finalFile, slug, cropWidth, cropHeight, {
+          watermarkType,
+          watermarkText,
+          watermarkLogo,
+          position: watermarkPosition,
+        });
+        if (result) blobs.push(result);
+      }
+      blobs.forEach((blob, i) => {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = selectedFiles[i].name;
+        a.click();
+        URL.revokeObjectURL(url);
       });
+    } finally {
+      setLoading(false);
     }
-  } finally {
-    setLoading(false);
-  }
-};
+  };
 
-  const showGridTools = [
-    "image-resizer",
-    "bulk-image-resizer",
-    "image-cropper",
-    "social-media-image-cropper",
-  ];
+  const showGridTools = ["image-resizer", "bulk-image-resizer", "image-cropper", "social-media-image-cropper"];
 
   return (
-    <div className="text-black">
-      <Navbar />
+    <>
+    <div className="text-black bg-linear-to-r from-[#f8f7ff] via-[#faf5f5] to-[#fffdf5] ">
+      <div className="mx-auto max-w-md px-3 py-4 min-h-screen">
+        <Navbar />
 
-      <div className="mx-auto max-w-4xl px-3 py-6 mt-24">
         {/* Header */}
-        <div className="text-center mb-4">
-          <h1 className="text-xl font-bold">{detail.title}</h1>
-          <p className="text-xs">{detail.description}</p>
+        <div className="text-center mb-2 mt-24">
+          <h1 className="text-lg md:text-2xl font-bold">{detail.title}</h1>
+          <p className="text-[11px] md:text-sm text-gray-600">{detail.description}</p>
         </div>
 
-        {/* Main Box */}
-        <div className="rounded-xl p-3 shadow-sm">
+        {/* Main Card */}
+        <div className="rounded-xl p-3 shadow-sm bg-white">
+
           {/* Upload */}
-          <label className="flex flex-col items-center gap-1 cursor-pointer rounded-lg border border-dashed border-pink-200 bg-[#fff1f4] px-3 py-4 text-xs hover:bg-[#ffe9ee] transition">
-            <ImageIcon className="h-5 w-5" />
-            <span className="font-semibold">{detail.uploadLabel}</span>
-            <span>JPG, PNG, WebP</span>
-            <input
-              type="file"
-              accept="image/*"
-              hidden
-              multiple
-              onChange={handleFileChange}
-            />
+          <label className="flex flex-col items-center cursor-pointer rounded-lg border border-dashed border-gray-300 bg-gray-50 p-2 text-xs space-y-1">
+            <img src="/cloud-logo.png" alt="upload" className="w-24 h-24 md:w-40 md:h-40" />
+            <span className="font-semibold text-sm md:text-xl text-center">Drag & drop your Images here</span>
+            <span className="text-gray-500 text-[10px] md:text-xs">Supported: JPG, PNG, WebP</span>
+            <input type="file" accept="image/*" hidden multiple onChange={handleFileChange} />
           </label>
 
-          {/* SHOW EXIF DATA */}
-         {/* SHOW EXIF DATA */}
-{slug === "exif-metadata-remover" && exifData && (
-  <div className="mt-3 rounded border border-pink-200 bg-[#fffafb] p-3 text-xs">
-    <h2 className="font-semibold mb-2">EXIF Metadata:</h2>
-    <div className="overflow-x-auto">
-      <table className="w-full text-left border-collapse text-[11px]">
-        <tbody>
-          {Object.entries(exifData).map(([key, value]) => (
-            <tr key={key} className="border-b border-pink-100">
-              <td className="pr-2 font-medium text-pink-700">{key}</td>
-              <td className="wrap-break-word">{String(value)}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  </div>
-)}
+          {/* EXIF Data */}
+          {slug === "exif-metadata-remover" && exifData && (
+            <div className="mt-2 rounded border border-gray-300 bg-white p-2 text-[10px] md:text-xs overflow-x-auto">
+              <h2 className="font-semibold mb-1">EXIF Metadata:</h2>
+              <table className="w-full text-left border-collapse text-[10px] md:text-[11px]">
+                <tbody>
+                  {Object.entries(exifData).map(([key, value]) => (
+                    <tr key={key} className="border-b border-gray-200">
+                      <td className="pr-1 font-medium text-gray-700">{key}</td>
+                      <td>{String(value)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
 
-
-          {/* Width/Height inputs */}
+          {/* Width/Height Inputs */}
           {previewUrls.length > 0 && showGridTools.includes(slug) && (
-            <div className="mt-3 flex justify-center gap-2">
+            <div className="mt-2 flex justify-center gap-1">
               <input
                 type="number"
                 value={cropWidth}
                 onChange={(e) => setCropWidth(+e.target.value)}
-                className="w-16 px-1 py-0.5 text-[10px] rounded border border-pink-200 bg-[#fffafb]"
+                className="w-12 px-1 py-0.5 text-[10px] rounded border border-gray-300"
                 placeholder="W"
               />
               <input
                 type="number"
                 value={cropHeight}
                 onChange={(e) => setCropHeight(+e.target.value)}
-                className="w-16 px-1 py-0.5 text-[10px] rounded border border-pink-200 bg-[#fffafb]"
+                className="w-12 px-1 py-0.5 text-[10px] rounded border border-gray-300"
                 placeholder="H"
               />
             </div>
           )}
 
-          {/* Crop Boxes */}
-          <div className="mt-3 grid grid-cols-2 gap-2">
-            {previewUrls.map((url, index) => (
-              <div
-                key={index}
-                className="relative h-28 rounded-md overflow-hidden bg-[#fff3f6] border border-pink-200"
-              >
+          {/* Cropper */}
+          <div className="mt-2 grid grid-cols-2 gap-1 md:gap-2">
+            {previewUrls.map((url, idx) => (
+              <div key={idx} className="relative h-20 md:h-28 rounded-md overflow-hidden border border-gray-300">
                 <Cropper
                   image={url}
-                  crop={cropData[index]?.crop}
-                  zoom={cropData[index]?.zoom}
-                  aspect={
-                    slug === "social-media-image-cropper"
-                      ? 1
-                      : cropWidth && cropHeight
-                        ? cropWidth / cropHeight
-                        : undefined
-                  }
-                  onCropChange={(newCrop) =>
-                    setCropData((prev) => {
-                      const newData = [...prev];
-                      newData[index].crop = newCrop;
-                      return newData;
-                    })
-                  }
-                  onZoomChange={(newZoom) =>
-                    setCropData((prev) => {
-                      const newData = [...prev];
-                      newData[index].zoom = newZoom;
-                      return newData;
-                    })
-                  }
-                  onCropComplete={onCropComplete(index)}
+                  crop={cropData[idx]?.crop}
+                  zoom={cropData[idx]?.zoom}
+                  aspect={slug === "social-media-image-cropper" ? 1 : cropWidth && cropHeight ? cropWidth / cropHeight : undefined}
+                  onCropChange={(c) => setCropData((prev) => { const d = [...prev]; d[idx].crop = c; return d; })}
+                  onZoomChange={(z) => setCropData((prev) => { const d = [...prev]; d[idx].zoom = z; return d; })}
+                  onCropComplete={onCropComplete(idx)}
                   cropShape={slug === "social-media-image-cropper" ? "round" : "rect"}
                   showGrid={showGridTools.includes(slug)}
                 />
@@ -253,8 +196,23 @@ const handleConvert = async () => {
 
           {/* Watermark Options */}
           {slug === "watermark-adder" && (
-            <div className="mt-3 rounded-lg border border-pink-200 bg-[#fffafb] p-2 text-xs">
-              {/* ... your watermark UI remains unchanged */}
+            <div className="mt-2 rounded-lg border border-gray-300 bg-white p-2 text-xs">
+              {/* Watermark UI goes here */}
+            </div>
+          )}
+
+          {/* Selected Files Info */}
+          {selectedFiles.length > 0 && (
+            <div className="mt-2 space-y-1 overflow-x-auto">
+              {selectedFiles.map((file, i) => (
+                <div key={i} className="flex items-center gap-1 p-1 border border-gray-200 rounded bg-gray-50 text-[10px] md:text-xs">
+                  <img src={previewUrls[i]} alt={file.name} className="w-8 h-8 md:w-10 md:h-10 object-cover rounded" />
+                  <div className="flex flex-col truncate">
+                    <span className="truncate">{file.name}</span>
+                    <span className="text-gray-500">{(file.size / 1024).toFixed(1)} KB</span>
+                  </div>
+                </div>
+              ))}
             </div>
           )}
 
@@ -263,13 +221,17 @@ const handleConvert = async () => {
             <button
               onClick={handleConvert}
               disabled={loading}
-              className="mt-3 w-full rounded-lg bg-[#ffe6eb] py-1.5 text-xs font-semibold hover:bg-[#ffdce3] disabled:opacity-50 transition"
+               className="mt-4 w-full rounded-lg bg-black text-white py-2.5 text-sm font-semibold disabled:opacity-50 transition-colors"
             >
               {loading ? "Processing..." : "Convert"}
             </button>
           )}
+
         </div>
       </div>
+   
+       <Footer/>
     </div>
+  </>
   );
 }
