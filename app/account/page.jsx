@@ -8,6 +8,7 @@ import Footer from "../components/Footer";
 import Link from "next/link";
 import Image from "next/image";
 import axios from "axios";
+import Loader from "../components/Loader";
 
 export default function AccountPage() {
   const { data: session, status } = useSession();
@@ -67,9 +68,7 @@ export default function AccountPage() {
 
   if (status === "loading" || loading)
     return (
-      <div className="min-h-screen flex items-center justify-center text-sm">
-        Loading...
-      </div>
+      <Loader/>
     );
   if (!session || !user) return null;
 
@@ -178,7 +177,7 @@ export default function AccountPage() {
           <div className=" gap-4 max-w-4xl mx-auto flex flex-col sm:flex-row sm:items-between  items-center  ">
 
             {/* Account Card */}
-            <div className="ml-17 rounded-xl  sm:w-[50%] w-[80%] bg-white p-4 shadow-sm flex flex-col gap-2">
+            <div className="ml-17 rounded-xl  sm:w-3/4 w-[80%] bg-white p-4 shadow-sm flex flex-col gap-2">
               <div className="flex justify-between items-center">
                 <h3 className="font-medium text-gray-900">Name</h3>
                 <button
@@ -221,7 +220,7 @@ export default function AccountPage() {
             </div>
 
             {/* Subscription Card */}
-            <div className="ml-17 rounded-xl  sm:w-[30%] w-[80%] bg-gray-100 p-4 shadow-sm flex flex-col gap-2">
+            <div className="ml-17 rounded-xl  sm:w-[99%] w-[80%] bg-gray-100 p-4 shadow-sm flex flex-col gap-2">
               <h3 className="font-medium text-gray-900">Subscription</h3>
               <p className="text-sm text-gray-600">Plan: Free</p>
               <p className="text-sm text-gray-600">

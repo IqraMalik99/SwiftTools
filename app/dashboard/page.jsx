@@ -8,6 +8,7 @@ import { Cardsections, CardiconMap } from "../lib/tools";
 import Footer from "../components/Footer";
 import Link from "next/link";
 import Image from "next/image";
+import Loader from "../components/Loader";
 
 export default function Dashboard() {
   const { data: session, status } = useSession();
@@ -22,9 +23,7 @@ export default function Dashboard() {
 
   if (status === "loading") {
     return (
-      <div className="min-h-screen flex items-center justify-center text-sm">
-        Loading dashboard...
-      </div>
+      <Loader/>
     );
   }
 
@@ -140,9 +139,9 @@ export default function Dashboard() {
           </p>
 
           {/* Cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2  gap-4">
 
-            <div className=" ml-17 sm:ml-2 rounded-xl bg-white p-4 shadow-sm sm:w-[80%] w-[77%] flex flex-col ">
+            <div className=" ml-17 sm:ml-2 rounded-xl bg-white p-4 shadow-sm sm:w-[90%] w-[77%] flex flex-col ">
               <h3 className="font-medium text-gray-900">Account</h3>
               <p className="text-xs text-gray-500 mt-1">
                 Name: {session.user?.name}
@@ -152,7 +151,7 @@ export default function Dashboard() {
               </p>
             </div>
 
-            <div className=" ml-17 sm:ml-2 rounded-xl bg-gray-100 p-4 shadow-sm flex flex-col sm:w-[80%] w-[77%] justify-between">
+            <div className=" ml-17 sm:ml-2 rounded-xl bg-gray-100 p-4 shadow-sm flex flex-col sm:w-[90%] w-[77%] justify-between">
               <h3 className="font-medium text-gray-900">Subscription</h3>
               <p className="text-sm text-gray-600">Plan: Free</p>
               <p className="text-sm text-gray-600">
