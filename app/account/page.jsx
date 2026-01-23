@@ -198,7 +198,7 @@ export default function AccountPage() {
                   <button
                     onClick={handleUpdate}
                     disabled={updating}
-                    className="bg-gray-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700 disabled:opacity-50"
+                    className="bg-gray-600 text-white px-3 py-1 rounded text-sm hover:bg-gray-700 disabled:opacity-50"
                   >
                     {updating ? "Saving..." : "Save"}
                   </button>
