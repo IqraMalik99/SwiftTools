@@ -14,15 +14,6 @@ function rgbToHex(r, g, b) {
   }).join("").toUpperCase();
 }
 
-// Calculate relative luminance (WCAG 2.1)
-function getRelativeLuminance(r, g, b) {
-  const sRGB = [r, g, b].map(c => {
-    c = c / 255;
-    return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
-  });
-  return 0.2126 * sRGB[0] + 0.7152 * sRGB[1] + 0.0722 * sRGB[2];
-}
-
 // RGB to HSL conversion
 function rgbToHsl(r, g, b) {
   r /= 255;
@@ -167,125 +158,13 @@ function medianCutQuantization(pixels, colorCount) {
   return colors;
 }
 
-// Get color name
-function getColorName(r, g, b) {
-  const hsl = rgbToHsl(r, g, b);
-  const { h, s, l } = hsl;
-  
-  if (l < 15) return "Black";
-  if (l > 95 && s < 10) return "White";
-  if (s < 20) {
-    if (l < 35) return "Dark Gray";
-    if (l > 65) return "Light Gray";
-    return "Gray";
-  }
-  
-  if (h >= 0 && h < 15) return s > 50 ? "Red" : "Pink";
-  if (h >= 15 && h < 45) return "Orange";
-  if (h >= 45 && h < 65) return "Yellow";
-  if (h >= 65 && h < 150) {
-    if (l > 70) return "Light Green";
-    if (l < 40) return "Dark Green";
-    return "Green";
-  }
-  if (h >= 150 && h < 195) return "Cyan";
-  if (h >= 195 && h < 240) {
-    if (l > 70) return "Light Blue";
-    if (l < 40) return "Dark Blue";
-    return "Blue";
-  }
-  if (h >= 240 && h < 280) {
-    if (s < 40) return "Lavender";
-    return "Purple";
-  }
-  if (h >= 280 && h < 330) return "Magenta";
-  return "Red";
-}
-
-// Analyze image and suggest dark/light/medium colors
-function analyzeImageTones(image) {
-  const width = image.width;
-  const height = image.height;
-  
-  const canvas = createCanvas(width, height);
-  const ctx = canvas.getContext("2d");
-  ctx.drawImage(image, 0, 0, width, height);
-  
-  const imageData = ctx.getImageData(0, 0, width, height);
-  const pixels = imageData.data;
-  
-  const tones = {
-    dark: { r: 0, g: 0, b: 0, count: 0 },
-    light: { r: 0, g: 0, b: 0, count: 0 },
-    medium: { r: 0, g: 0, b: 0, count: 0 }
-  };
-  
-  const brightnessThresholds = {
-    dark: 85,    // 0-85: dark
-    medium: 170  // 86-170: medium, 171-255: light
-  };
-  
-  // Analyze brightness distribution
-  for (let i = 0; i < pixels.length; i += 16) {
-    const r = pixels[i];
-    const g = pixels[i + 1];
-    const b = pixels[i + 2];
-    const alpha = pixels[i + 3];
-    
-    if (alpha < 128) continue;
-    
-    const brightness = Math.round((r + g + b) / 3);
-    
-    if (brightness <= brightnessThresholds.dark) {
-      tones.dark.r += r;
-      tones.dark.g += g;
-      tones.dark.b += b;
-      tones.dark.count++;
-    } else if (brightness <= brightnessThresholds.medium) {
-      tones.medium.r += r;
-      tones.medium.g += g;
-      tones.medium.b += b;
-      tones.medium.count++;
-    } else {
-      tones.light.r += r;
-      tones.light.g += g;
-      tones.light.b += b;
-      tones.light.count++;
-    }
-  }
-  
-  // Calculate average colors for each tone category
-  const result = {};
-  for (const [tone, data] of Object.entries(tones)) {
-    if (data.count > 0) {
-      result[tone] = {
-        r: Math.round(data.r / data.count),
-        g: Math.round(data.g / data.count),
-        b: Math.round(data.b / data.count),
-        percentage: (data.count / (pixels.length / 16)) * 100
-      };
-    } else {
-      // Default fallback colors
-      result[tone] = {
-        r: tone === 'dark' ? 30 : tone === 'medium' ? 150 : 230,
-        g: tone === 'dark' ? 30 : tone === 'medium' ? 150 : 230,
-        b: tone === 'dark' ? 30 : tone === 'medium' ? 150 : 230,
-        percentage: 0
-      };
-    }
-  }
-  
-  return result;
-}
-
-// Extract dominant colors and categorize by tone
-function getDominantColorsWithTones(image, colorCount = 6) {
+// Extract dominant colors
+function getDominantColors(image, colorCount = 6) {
   const width = image.width;
   const height = image.height;
   
   const sampleWidth = Math.min(width, 200);
   const sampleHeight = Math.min(height, 200);
-  const scale = Math.min(sampleWidth / width, sampleHeight / height);
   
   const canvas = createCanvas(sampleWidth, sampleHeight);
   const ctx = canvas.getContext("2d");
@@ -295,9 +174,6 @@ function getDominantColorsWithTones(image, colorCount = 6) {
   
   const imageData = ctx.getImageData(0, 0, sampleWidth, sampleHeight);
   const pixels = imageData.data;
-  
-  // Analyze image tones first
-  const imageTones = analyzeImageTones(image);
   
   // Extract colors with quantization
   const colorMap = new Map();
@@ -329,50 +205,15 @@ function getDominantColorsWithTones(image, colorCount = 6) {
   
   const quantizedColors = medianCutQuantization(pixelArray, colorCount * 2);
   
-  // Categorize colors by tone and deduplicate
-  const categorizedColors = {
-    dark: [],
-    medium: [],
-    light: [],
-    vibrant: [] // High saturation colors
-  };
-  
+  // Deduplicate similar colors
+  const uniqueColors = [];
   const colorThreshold = 15;
   
   for (const color of quantizedColors) {
     const { r, g, b, weight } = color;
-    const hsl = rgbToHsl(r, g, b);
-    const brightness = (r + g + b) / 3;
-    
-    // Categorize by brightness
-    let category;
-    if (brightness <= 85) {
-      category = 'dark';
-    } else if (brightness <= 170) {
-      category = 'medium';
-    } else {
-      category = 'light';
-    }
-    
-    // Also check for vibrant colors (high saturation)
-    if (hsl.s > 60) {
-      // Check if not already in vibrant
-      let isDuplicate = false;
-      for (const vibrantColor of categorizedColors.vibrant) {
-        const diff = colorDifference([r, g, b], [vibrantColor.r, vibrantColor.g, vibrantColor.b]);
-        if (diff < colorThreshold) {
-          isDuplicate = true;
-          break;
-        }
-      }
-      if (!isDuplicate) {
-        categorizedColors.vibrant.push({ ...color, hsl });
-      }
-    }
-    
-    // Check if color is too similar to already selected colors in its category
     let isUnique = true;
-    for (const selected of categorizedColors[category]) {
+    
+    for (const selected of uniqueColors) {
       const diff = colorDifference([r, g, b], [selected.r, selected.g, selected.b]);
       if (diff < colorThreshold) {
         isUnique = false;
@@ -381,41 +222,18 @@ function getDominantColorsWithTones(image, colorCount = 6) {
     }
     
     if (isUnique) {
-      categorizedColors[category].push({ ...color, hsl });
+      uniqueColors.push({ ...color });
     }
   }
   
-  // Sort each category by importance and limit
-  Object.keys(categorizedColors).forEach(category => {
-    categorizedColors[category].sort((a, b) => b.weight - a.weight);
-    categorizedColors[category] = categorizedColors[category].slice(0, Math.ceil(colorCount / 3));
-  });
-  
-  // Combine all colors, prioritizing vibrant ones
-  const allColors = [
-    ...categorizedColors.vibrant,
-    ...categorizedColors.dark,
-    ...categorizedColors.medium,
-    ...categorizedColors.light
-  ].slice(0, colorCount);
-  
-  // Sort final colors by brightness for better visual presentation
-  allColors.sort((a, b) => {
+  // Sort by brightness for better visual presentation
+  uniqueColors.sort((a, b) => {
     const brightnessA = (a.r + a.g + a.b) / 3;
     const brightnessB = (b.r + b.g + b.b) / 3;
     return brightnessA - brightnessB;
   });
   
-  return {
-    colors: allColors,
-    toneAnalysis: imageTones,
-    categories: {
-      dark: categorizedColors.dark.slice(0, 2),
-      medium: categorizedColors.medium.slice(0, 2),
-      light: categorizedColors.light.slice(0, 2),
-      vibrant: categorizedColors.vibrant.slice(0, 2)
-    }
-  };
+  return uniqueColors.slice(0, colorCount);
 }
 
 export async function POST(request) {
@@ -436,76 +254,50 @@ export async function POST(request) {
     const imageBuffer = Buffer.from(arrayBuffer);
     const img = await loadImage(imageBuffer);
 
-    const { colors } = getDominantColorsWithTones(img, Math.min(Math.max(colorCount, 3), 12));
+    const colors = getDominantColors(img, Math.min(Math.max(colorCount, 3), 12));
 
-    // Create a simple visual palette with minimal text
-    const blockSize = 150;
-    const spacing = 20;
-    const padding = 40;
+    // Create color palette - VISUAL ONLY, NO TEXT
+    const blockSize = 120;
+    const spacing = 10;
+    const padding = 20;
     
-    const cols = Math.min(colors.length, 4);
+    const cols = Math.min(colors.length, 6);
     const rows = Math.ceil(colors.length / cols);
     
     const totalWidth = cols * blockSize + (cols - 1) * spacing + padding * 2;
-    const totalHeight = rows * blockSize + (rows - 1) * spacing + padding * 2 + 50;
+    const totalHeight = rows * blockSize + (rows - 1) * spacing + padding * 2;
     
     const canvas = createCanvas(totalWidth, totalHeight);
     const ctx = canvas.getContext("2d");
 
-    // Background
-    ctx.fillStyle = '#f8f9fa';
+    // White background
+    ctx.fillStyle = '#ffffff';
     ctx.fillRect(0, 0, totalWidth, totalHeight);
 
-    // Title (use default sans-serif)
-    ctx.fillStyle = '#2c3e50';
-    ctx.font = 'bold 24px sans-serif';
-    ctx.textAlign = 'center';
-    ctx.fillText('Color Palette', totalWidth / 2, padding);
-
-    // Draw color blocks
+    // Draw color blocks only - NO TEXT
     colors.forEach((color, i) => {
       const row = Math.floor(i / cols);
       const col = i % cols;
       const x = padding + col * (blockSize + spacing);
-      const y = padding + 50 + row * (blockSize + spacing);
+      const y = padding + row * (blockSize + spacing);
       const { r, g, b } = color;
       
-      // Color block with shadow
-      ctx.shadowColor = 'rgba(0, 0, 0, 0.2)';
-      ctx.shadowBlur = 10;
-      ctx.shadowOffsetY = 5;
-      
+      // Color block only - no shadows, no borders, no text
       ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
       ctx.fillRect(x, y, blockSize, blockSize);
-      
-      ctx.shadowColor = 'transparent';
-      
-      // Border
-      ctx.strokeStyle = '#333';
-      ctx.lineWidth = 2;
-      ctx.strokeRect(x, y, blockSize, blockSize);
-      
-      // HEX code in center
-      const hex = rgbToHex(r, g, b);
-      const brightness = (r + g + b) / 3;
-      ctx.fillStyle = brightness > 128 ? '#000' : '#fff';
-      ctx.font = 'bold 20px sans-serif';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillText(hex, x + blockSize / 2, y + blockSize / 2);
     });
 
-    const buffer = canvas.toBuffer("image/jpeg", { 
-      quality: 0.95,
-      chromaSubsampling: false
+    const buffer = canvas.toBuffer("image/png", { 
+      compressionLevel: 0,
+      filters: canvas.PNG_FILTER_NONE
     });
     
     const originalName = file.name.replace(/\.[^/.]+$/, "");
-    const filename = `${originalName}_palette.jpg`;
+    const filename = `${originalName}_palette.png`;
 
     return new NextResponse(buffer, {
       headers: {
-        "Content-Type": "image/jpeg",
+        "Content-Type": "image/png",
         "Content-Disposition": `attachment; filename="${filename}"`,
         "Content-Length": buffer.length.toString(),
       },
@@ -525,17 +317,18 @@ export async function POST(request) {
 export async function GET() {
   return NextResponse.json({
     name: "Color Palette Generator",
-    description: "Generates color palettes from uploaded images",
+    description: "Extracts dominant colors from images and creates a visual palette",
     endpoint: "POST /api/design/color-palette",
     parameters: {
       file: "Image file (multipart/form-data, JPG/PNG/WebP, max 20MB)",
       colorCount: "Number of colors to extract (3-12, optional, default: 6)"
     },
-    returns: "JPG image with color palette",
+    returns: "PNG image with color blocks only (no text)",
     features: [
       "Dominant color extraction using median cut quantization",
-      "Simple visual palette output",
-      "HEX codes displayed on color blocks"
+      "Pure visual output - no text or labels",
+      "Color similarity filtering",
+      "Brightness-based sorting"
     ]
   });
 }
