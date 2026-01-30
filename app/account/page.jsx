@@ -174,7 +174,7 @@ export default function AccountPage() {
             Manage your account & subscription
           </p>
 
-          <div className=" gap-4 max-w-4xl mx-auto flex flex-col sm:flex-row sm:items-between  items-center  ">
+          <div className=" gap-4 max-w-4xl mx-auto flex flex-col sm:flex-row sm:items-between  items-center  flex-wrap ">
 
             {/* Account Card */}
             <div className="ml-17 rounded-xl  sm:w-3/4 w-[80%] bg-white p-4 shadow-sm flex flex-col gap-2">
@@ -220,7 +220,7 @@ export default function AccountPage() {
             </div>
 
             {/* Subscription Card */}
-            <div className="ml-17 rounded-xl  sm:w-[99%] w-[80%] bg-gray-100 p-4 shadow-sm flex flex-col gap-2">
+            <div className="ml-17 rounded-xl  sm:w-3/4 w-[80%] bg-gray-100 p-4 shadow-sm flex flex-col gap-2">
               <h3 className="font-medium text-gray-900">Subscription</h3>
               <p className="text-sm text-gray-600">Plan: Free</p>
               <p className="text-sm text-gray-600">
@@ -229,6 +229,22 @@ export default function AccountPage() {
               <Link href="/pricing" className="mt-auto px-3 py-1 bg-gray-800 text-white rounded text-sm hover:bg-black w-max">
                 Upgrade Now
               </Link>
+            </div>
+            <div className="ml-17 rounded-xl  sm:w-3/4 w-[80%] bg-white p-4 shadow-sm flex flex-col gap-2">
+              <h3 className="font-medium text-gray-900">Social links</h3>
+              <p className="text-sm text-gray-600">Connect your social accounts to log in through Google.</p>
+              <div className="flex items-center justify-between border rounded-lg px-3 py-2">
+                <div className="flex items-center gap-3">
+                  <Image src="/google.png" alt="Google" width={20} height={20} />
+                  <div className="flex flex-col">
+                    <span className="text-sm font-medium">Google</span>
+                    <span className="text-xs text-gray-500">{user.email}</span>
+                  </div>
+                </div>
+                <span className="text-xs px-2 py-1 rounded-full bg-green-100 text-green-700">
+                  Connected
+                </span>
+              </div>
             </div>
           </div>
         </section>

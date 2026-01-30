@@ -179,7 +179,7 @@ export default function DesignToolPage({ params }) {
   return (
    <>
     <div className="text-black w-screen bg-linear-to-r from-[#f8f7ff] via-[#faf5f5] to-[#fffdf5] min-h-screen">
-      <div className="mx-auto max-w-md px-3 py-4">
+      <div className="mx-auto max-w-md px-3 py-4 min-h-screen">
         <Navbar />
         {/* Header */}
         <div className="text-center mb-3 mt-24">
@@ -518,8 +518,8 @@ export default function DesignToolPage({ params }) {
         </div>
       </div>
 
-    </div>
       <Footer />
+    </div>
    </>
   );
 }

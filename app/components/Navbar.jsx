@@ -17,7 +17,7 @@ export default function Navbar() {
   const userInitial = session?.user?.name?.charAt(0).toUpperCase();
 
   return (
-    <header className="absolute top-3 left-0 right-0 z-50">
+    <header className="absolute top-3 left-0 right-0 z-40">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <div className="flex items-center justify-between h-16 rounded-full bg-white/80 backdrop-blur-md shadow-lg px-4">
 
@@ -29,9 +29,8 @@ export default function Navbar() {
           {/* Desktop Nav Links */}
           <nav className="hidden md:flex items-center gap-6 text-sm text-gray-700">
             <Link href={"/tools"} onClick={() => setIsOpen(false)} className="hover:text-black transition">Tools</Link>
-            <Link className="hover:text-black transition" href="usecase">Use cases</Link>
             <Link className="hover:text-black transition" href="pricing">Pricing</Link>
-            <Link className="hover:text-black transition" href="api">API</Link>
+            <Link className="hover:text-black transition" href="docs">API</Link>
             <Link className="hover:text-black transition" href="docs">Docs</Link>
           </nav>
 
@@ -92,9 +91,8 @@ export default function Navbar() {
             {/* Links */}
             <nav className="mt-15 flex flex-col gap-4 text-gray-700 text-sm">
               <Link href={"/tools"} onClick={() => setIsOpen(false)} className="hover:text-black transition">Tools</Link>
-              <Link onClick={() => setIsOpen(false)} href="usecase" className="hover:text-black transition">Use cases</Link>
               <Link onClick={() => setIsOpen(false)} href="pricing" className="hover:text-black transition">Pricing</Link>
-              <Link onClick={() => setIsOpen(false)} href="api" className="hover:text-black transition">API</Link>
+              <Link onClick={() => setIsOpen(false)} href="docs" className="hover:text-black transition">API</Link>
               <Link onClick={() => setIsOpen(false)} href="docs" className="hover:text-black transition">Docs</Link>
             </nav>
           </div>

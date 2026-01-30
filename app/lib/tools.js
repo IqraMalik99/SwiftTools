@@ -155,13 +155,6 @@ export const designTool = {
     accept: "",
     type: "utility",
   },
-  "social-media-templates": {
-    title: "Social Media Templates",
-    description: "Ready-to-use post templates.",
-    uploadLabel: "No file upload required",
-    accept: "",
-    type: "utility",
-  },
   "font-pairing-tool": {
     title: "Font Pairing Tool",
     description: "Find perfect font combinations.",
@@ -231,7 +224,6 @@ export const CardiconMap = {
   "Color Palette Generator": <Palette size={18} className="text-purple-600" />,
   "Gradient Generator": <Palette size={18} className="text-purple-600" />,
   "Mockup Generator": <ImageIcon size={18} className="text-purple-600" />,
-  "Social Media Templates": <ImageIcon size={18} className="text-purple-600" />,
   "Font Pairing Tool": <Palette size={18} className="text-purple-600" />,
 
   "JSON Formatter & Validator": <Code size={18} className="text-green-600" />,
@@ -283,7 +275,6 @@ export const Cardsections = [
       { name: "Color Palette Generator", slug: "color-palette-generator", desc: "Extract or generate color palettes" },
       { name: "Gradient Generator", slug: "gradient-generator", desc: "Create CSS and design gradients" },
       { name: "Mockup Generator", slug: "mockup-generator", desc: "Showcase designs on real devices" },
-      { name: "Social Media Templates", slug: "social-media-templates", desc: "Ready-to-use post templates" },
       { name: "Font Pairing Tool", slug: "font-pairing-tool", desc: "Find perfect font combinations" },
     ],
   },
