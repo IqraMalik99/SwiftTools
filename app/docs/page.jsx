@@ -190,7 +190,7 @@ export default function DocumentationPage() {
         {selectedTool ? (
           <div className="rounded-2xl px-6 mt-2  space-y-12">
             {/* Header */}
-            <div className="space-y-3">
+            <div className="space-y-1">
               <h2 className="text-3xl sm:text-xl font-bold text-gray-800">{activeTool.name}</h2>
               <p className="text-gray-500 text-sm sm:text-md max-w-3xl">
                 {activeTool.description}
@@ -200,14 +200,14 @@ export default function DocumentationPage() {
             {/* Key Features */}
             {activeTool.features?.length > 0 && (
               <div className="p-6 rounded-xl bg-gray-50/50 backdrop-blur-sm">
-                <h3 className="text-xl font-semibold mb-4">Key Features</h3>
+                <h3 className="text-xl font-semibold mb-4 text-black">Key Features</h3>
                 <ul className="space-y-2">
                   {activeTool.features.map((feature, idx) => (
                     <li
                       key={idx}
-                      className="flex items-start gap-3 p-3 rounded-lg hover:bg-gray-100/50"
+                      className="flex items-start gap-1 p-3 rounded-lg hover:bg-gray-100/50"
                     >
-                      <span className="font-bold">*</span>
+                      <span className="font-bold text-gray-700">*</span>
                       <span className="text-gray-700 text-sm">{feature}</span>
                     </li>
                   ))}
@@ -226,7 +226,7 @@ export default function DocumentationPage() {
                     {activeTool.apiEndpoint}
                   </p>
                   <button
-                    className="bg-gray-200 px-3 py-2 cursor-pointer rounded text-xs hover:bg-gray-300"
+                    className="bg-gray-200 px-3 py-2 text-black cursor-pointer rounded text-xs hover:bg-gray-300"
                     onClick={() =>
                       navigator.clipboard.writeText(activeTool.apiEndpoint)
                     }
@@ -240,15 +240,15 @@ export default function DocumentationPage() {
             {/* Request Format */}
             {activeTool.requestFormat && (
               <div className="p-6 rounded-xl bg-gray-50/50 backdrop-blur-sm">
-                <h3 className="text-lg font-semibold mb-3">Request Format</h3>
+                <h3 className="text-lg font-semibold mb-3 text-black">Request Format</h3>
                 <p className="text-sm text-gray-600 mb-3">
-                  Type: <span className="font-mono">{activeTool.requestFormat.type}</span>
+                 <span className="font-bold"> Type:</span> <span className="text-sm ">{activeTool.requestFormat.type}</span>
                 </p>
                 <ul className="space-y-2">
                   {Object.entries(activeTool.requestFormat.fields).map(
                     ([key, value]) => (
                       <li key={key} className="text-sm">
-                        <span className="font-mono text-gray-800">{key}</span>
+                        <span className=" font-bold text-gray-800">{key}</span>
                         <span className="text-gray-500"> — {value}</span>
                       </li>
                     )
@@ -260,7 +260,7 @@ export default function DocumentationPage() {
             {/* Free Limits */}
             {activeTool.freeLimits && (
               <div className="p-6 rounded-xl bg-gray-50/50 backdrop-blur-sm">
-                <h3 className="text-lg font-semibold mb-2">Free Usage</h3>
+                <h3 className="text-lg font-semibold mb-1 text-gray-800">Free Usage</h3>
                 <p className="text-gray-700">{activeTool.freeLimits}</p>
               </div>
             )}
@@ -268,11 +268,11 @@ export default function DocumentationPage() {
             {/* Premium Benefits */}
             {activeTool.premiumBenefits?.length > 0 && (
               <div className="p-6 rounded-xl bg-gray-50/50 backdrop-blur-sm">
-                <h3 className="text-lg font-semibold mb-4">Premium Benefits</h3>
+                <h3 className="text-lg font-semibold mb-2 text-gray-800">Premium Benefits</h3>
                 <ul className="space-y-2">
                   {activeTool.premiumBenefits.map((item, idx) => (
                     <li key={idx} className="flex gap-2 text-gray-700">
-                      <span className="text-indigo-600 font-bold">★</span>
+                      <span className="text-gray-800 font-bold">★</span>
                       {item}
                     </li>
                   ))}
@@ -284,7 +284,7 @@ export default function DocumentationPage() {
             {activeTool.detailedGuide && (
               <div className="p-6 mb-3 rounded-xl bg-gray-100/25 backdrop-blur-md shadow-lg shadow-gray-500/5">
                 <h3 className="text-lg font-semibold mb-3 text-gray-800">How It Works</h3>
-                <div className="text-gray-600 max-w-none">
+                <div className="text-gray-600 text-xs max-w-none">
                   <ReactMarkdown>{activeTool.detailedGuide}</ReactMarkdown>
                 </div>
               </div>
