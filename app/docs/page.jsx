@@ -180,7 +180,7 @@ export default function DocumentationPage() {
         {isMobile && (
           <button
             onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="relative mt-20  w-10 h-10 text-black mb-1 bg-white border border-gray-300 rounded-full flex items-center justify-center z-30 shadow-lg"
+            className="relative mt-20  w-10 h-10 text-black mb- bg-white border border-gray-300 rounded-full flex items-center justify-center z-30 shadow-lg"
             aria-label={sidebarOpen ? "Close sidebar" : "Open sidebar"}
           >
             {sidebarOpen ? <ChevronLeft size={20} /> : <ChevronRight size={20} />}
@@ -188,7 +188,7 @@ export default function DocumentationPage() {
         )}
 
         {selectedTool ? (
-          <div className="rounded-2xl px-6 mt-2  space-y-12">
+          <div className="rounded-2xl px-6 mt-2 ">
             {/* Header */}
             <div className="space-y-1">
               <h2 className="text-3xl sm:text-xl font-bold text-gray-800">{activeTool.name}</h2>
@@ -321,7 +321,7 @@ export default function DocumentationPage() {
 
             {/* Base URL Card */}
             <div className="mt-10 w-full max-w-2xl">
-              <h3 className="text-xl  font-semibold text-gray-800 uppercase tracking-wide mb-3">
+              <h3 className="text-xl  font-semibold text-gray-800  tracking-wide mb-3">
                 Base URL
               </h3>
               <div className="relative group">
