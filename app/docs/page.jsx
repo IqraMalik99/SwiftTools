@@ -199,7 +199,7 @@ export default function DocumentationPage() {
 
             {/* Key Features */}
             {activeTool.features?.length > 0 && (
-              <div className="p-6 my-1 rounded-xl bg-white backdrop-blur-sm">
+              <div className="p-6 my-2 rounded-xl bg-white backdrop-blur-sm">
                 <h3 className="text-sm font-semibold mb-2 text-black">Key Features</h3>
                 <ul className="space-y-0">
                   {activeTool.features.map((feature, idx) => (
@@ -261,11 +261,11 @@ export default function DocumentationPage() {
 
             {/* Premium Benefits */}
             {activeTool.premiumBenefits?.length > 0 && (
-              <div className="p-6 rounded-xl bg-gray-50/50 backdrop-blur-sm">
+              <div className=" rounded-xl bg-gray-50/50 backdrop-blur-sm">
                 <h3 className="text-lg font-semibold mb-2 text-gray-800">Premium Benefits</h3>
                 <ul className="space-y-1">
                   {activeTool.premiumBenefits.map((item, idx) => (
-                    <li key={idx} className="flex gap-2 text-gray-700">
+                    <li key={idx} className="flex text-sm gap-2 text-gray-700">
                       <span className="text-gray-800 font-bold">★</span>
                       {item}
                     </li>

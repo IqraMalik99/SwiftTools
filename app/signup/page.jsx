@@ -113,7 +113,7 @@ export default function SignupPage() {
                 placeholder="Username"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full rounded-full border border-gray-300 pl-11 pr-4 py-2 text-sm focus:outline-none focus:border-gray-900"
+                className="w-full text-black rounded-full border border-gray-300 pl-11 pr-4 py-2 text-sm focus:outline-none focus:border-gray-900"
               />
             </div>
             {/* Email */}
@@ -124,7 +124,7 @@ export default function SignupPage() {
                 placeholder="Email Address"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full rounded-full border border-gray-300 pl-11 pr-4 py-2 text-sm focus:outline-none focus:border-gray-900"
+                className="w-full text-black rounded-full border border-gray-300 pl-11 pr-4 py-2 text-sm focus:outline-none focus:border-gray-900"
               />
             </div>
 
@@ -137,7 +137,7 @@ export default function SignupPage() {
     placeholder="Password"
     value={password}
     onChange={(e) => setPassword(e.target.value)}
-    className="w-full rounded-full border border-gray-300 pl-11 pr-10 py-2 text-sm focus:outline-none focus:border-gray-900"
+    className="w-full rounded-full border text-black border-gray-300 pl-11 pr-10 py-2 text-sm focus:outline-none focus:border-gray-900"
   />
   <button
     type="button"

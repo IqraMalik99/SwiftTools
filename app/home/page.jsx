@@ -10,7 +10,7 @@ export default function Home() {
       {/* Hero */}
       <section className="flex min-h-screen flex-col items-center justify-center px-4 text-center ">
 
-        <span className="mb-6 rounded-full bg-white px-4 py-1 text-sm shadow">
+        <span className="mb-6 rounded-full bg-white text-black px-4 py-1 text-sm shadow">
           ✨ Introducing SwiftTools 1.0
         </span>
 
@@ -41,7 +41,7 @@ export default function Home() {
             <input
               type="text"
               placeholder="Search for Privacy Blur"
-              className="w-full bg-transparent text-sm outline-none"
+              className="w-full text-black bg-transparent text-sm outline-none"
             />
           </div>
         </div>

@@ -65,7 +65,7 @@ export default function LoginPage() {
               alt="SwiftTools"
               width={180}
               height={180}
-              className="mx-auto cursor-pointer"
+              className="mx-auto text-black cursor-pointer"
               onClick={() => router.push("/")}
             />
             <h1 className="mt-5 text-xl font-semibold text-gray-900">
@@ -92,7 +92,7 @@ export default function LoginPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="you@gmail.com"
-                  className="w-full rounded-full border border-gray-300 pl-11 pr-4 py-2 text-sm focus:outline-none focus:border-gray-900"
+                  className="w-full text-black rounded-full border border-gray-300 pl-11 pr-4 py-2 text-sm focus:outline-none focus:border-gray-900"
                 />
               </div>
             </div>
