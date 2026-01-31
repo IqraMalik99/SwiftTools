@@ -9,6 +9,7 @@ import Link from "next/link";
 import Image from "next/image";
 import axios from "axios";
 import Loader from "../components/Loader";
+import CustomFooter from "../components/CustomFooter";
 
 export default function AccountPage() {
   const { data: session, status } = useSession();
@@ -73,15 +74,15 @@ export default function AccountPage() {
   if (!session || !user) return null;
 
   return (
-    <main className="min-h-screen flex bg-linear-to-r from-[#f8f7ff] via-[#fffbfb] to-[#fffdf5]">
+    <main className="min-h-screen flex bg-linear-to-r from-[#fcfbff] via-[#fff9f9] to-[#fffdf5]">
       {/* Sidebar */}
       <aside
-        className={`fixed top-0 left-0 h-full bg-white/80 backdrop-blur-md shadow-lg p-4 transition-all duration-300 z-30
+        className={`fixed top-0 left-0 h-full  backdrop-blur-md shadow-lg p-4 transition-all duration-300 z-30
           ${sidebarOpen ? "w-64" : "w-16"} flex flex-col`}
       >
         <div className="flex items-center justify-between mb-6 mt-16">
           <button
-            className="p-1 rounded hover:bg-gray-100"
+            className="p-1 rounded "
             onClick={() => setSidebarOpen(!sidebarOpen)}
           >
             <ArrowRight
@@ -251,6 +252,7 @@ export default function AccountPage() {
 
        <div className="ml-13 overflow-hidden sm:ml-1">
  <Footer />
+ <CustomFooter/>
        </div>
       </div>
     </main>

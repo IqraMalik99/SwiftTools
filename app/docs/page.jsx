@@ -15,6 +15,7 @@ import { useState, useEffect } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { Cardsections, CardiconMap } from "../lib/tools";
+import CustomFooter from "../components/CustomFooter";
 
 export default function DocumentationPage() {
   const [activeCategory, setActiveCategory] = useState(null);
@@ -77,7 +78,8 @@ export default function DocumentationPage() {
   const activeTool = selectedTool ? tools.find((t) => t.id === selectedTool) : null;
 
   return (
-    <div className="flex min-h-screen bg-linear-to-r from-[#f8f7ff] via-[#fff7f7] to-[#fffdf5]">
+    <div className="bg-linear-to-r from-[#f9f9fb] via-[#fff1f1] to-[#fffdf5]">
+    <div className="flex min-h-screen bg-linear-to-r from-[#f9f9fb] via-[#fff1f1] to-[#fffdf5]">
       {/* Mobile Overlay */}
       {isMobile && sidebarOpen && (
         <div
@@ -89,7 +91,7 @@ export default function DocumentationPage() {
       {/* Sidebar - Fixed for mobile, relative for desktop */}
       <aside
         className={`
-         bg-white  backdrop-blur-md flex flex-col min-h-screen 
+        backdrop-blur-md flex flex-col min-h-screen 
           transition-all duration-300 ease-in-out
           ${sidebarOpen ? "w-64" : "w-0 md:w-16"}
           ${isMobile 
@@ -188,10 +190,10 @@ export default function DocumentationPage() {
         )}
 
         {selectedTool ? (
-          <div className="rounded-2xl px-6 mt-2 ">
+          <div className="rounded-2xl px-6 mt-2   ">
             {/* Header */}
             <div className="space-y-1">
-              <h2 className="text-3xl sm:text-xl font-bold text-gray-800">{activeTool.name}</h2>
+              <h2 className="text-xl sm:text-4xl font-bold text-gray-800">{activeTool.name}</h2>
               <p className="text-gray-500 text-sm sm:text-md max-w-3xl">
                 {activeTool.description}
               </p>
@@ -199,7 +201,7 @@ export default function DocumentationPage() {
 
             {/* Key Features */}
             {activeTool.features?.length > 0 && (
-              <div className="p-6 mt-1 mb-3 rounded-xl bg-white backdrop-blur-sm">
+              <div className="p-6 mt-2  mb-3 rounded-xl bg-white backdrop-blur-sm">
                 <h3 className="text-sm font-semibold mb-2 text-black">Key Features</h3>
                 <ul className="space-y-0">
                   {activeTool.features.map((feature, idx) => (
@@ -217,8 +219,8 @@ export default function DocumentationPage() {
 
             {/* API Endpoint */}
             {activeTool.apiEndpoint && (
-              <div className="max-w-2xl">
-                <h3 className="text-sm font-semibold text-gray-900 uppercase mb-1">
+              <div className="max-w-2xl mt-2">
+                <h3 className="text-lg font-semibold  text-gray-900 uppercase mb-1">
                   API Endpoint
                 </h3>
                 <div className="flex items-center gap-3 rounded-lg border border-gray-200 bg-white p-2 shadow-sm">
@@ -239,7 +241,7 @@ export default function DocumentationPage() {
 
             {/* Request Format */}
             {activeTool.requestFormat && (
-              <div className=" rounded-xl bg-gray-50/50 backdrop-blur-sm">
+              <div className=" rounded-xl mt-2 bg-gray-50/50 backdrop-blur-sm">
                 <h3 className="text-lg font-semibold mb-3 text-black">Request Format</h3>
                 <p className="text-sm text-gray-600 mb-1">
                  <span className="font-bold"> Type:</span> <span className="text-sm ">{activeTool.requestFormat.type}</span>
@@ -261,7 +263,7 @@ export default function DocumentationPage() {
 
             {/* Premium Benefits */}
             {activeTool.premiumBenefits?.length > 0 && (
-              <div className=" rounded-xl bg-gray-50/50 backdrop-blur-sm">
+              <div className=" rounded-xl mt-2 bg-gray-50/50 backdrop-blur-sm">
                 <h3 className="text-lg font-semibold mb-2 text-gray-800">Premium Benefits</h3>
                 <ul className="space-y-1">
                   {activeTool.premiumBenefits.map((item, idx) => (
@@ -276,7 +278,7 @@ export default function DocumentationPage() {
 
             {/* Detailed Guide */}
             {activeTool.detailedGuide && (
-              <div className="p-6 mb-3 rounded-xl bg-gray-200/25 backdrop-blur-md shadow-lg shadow-gray-500/5">
+              <div className="p-6 mb-3 mt-2 rounded-xl mt-3 bg-gray-200/25 backdrop-blur-md shadow-lg shadow-gray-500/5">
                 <h3 className="text-lg font-semibold mb-2 text-gray-800">How It Works</h3>
                 <div className="text-gray-600 text-xs max-w-none ">
                   <ReactMarkdown>{activeTool.detailedGuide}</ReactMarkdown>
@@ -285,7 +287,7 @@ export default function DocumentationPage() {
             )}
           </div>
         ) : (
-          <section className={`${ sidebarOpen && !isMobile ? "mt-11" :""} flex min-h-screen flex-col items-start px-4 text-left max-w-6xl mx-auto `}>
+          <section className={`${ sidebarOpen && !isMobile ? "mt-11" :""}  flex min-h-screen flex-col items-start px-4 text-left max-w-6xl mx-auto `}>
             {/* Badge */}
             <div className="mb-4">
               <span className="text-black rounded-full bg-white/80 backdrop-blur px-5 py-1.5 text-sm font-medium shadow-md border border-gray-200">
@@ -379,5 +381,7 @@ export default function DocumentationPage() {
         <Footer />
       </main>
     </div>
+     <CustomFooter/>
+      </div>
   );
 }

@@ -5,7 +5,7 @@ import {
   ArrowRight
 } from "lucide-react";
 import { CardiconMap, Cardsections } from "../lib/tools";
-import Footer from "./Footer";
+
 
 /* ================= ICON MAP ================= */
 
@@ -56,7 +56,6 @@ export default function CardsPage({ mtop }) {
           </section>
         ))}
       </div>
-      <Footer />
     </div>
   );
 }

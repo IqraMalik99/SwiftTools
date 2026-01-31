@@ -10,7 +10,7 @@ export default function Loader({ text = "Loading..." }) {
         </div>
 
         {/* Text */}
-        <p className="text-sm text-gray-600 font-medium tracking-wide">
+        <p className="text-sm text-gray-600 font-medium  bg-linear-to-r from-[#f8f7ff] via-[#fff7f7] to-[#fffdf5]">
           {text}
         </p>
       </div>

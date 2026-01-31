@@ -9,6 +9,7 @@ import Footer from "../components/Footer";
 import Link from "next/link";
 import Image from "next/image";
 import Loader from "../components/Loader";
+import CustomFooter from "../components/CustomFooter";
 
 
 export default function Dashboard() {
@@ -37,11 +38,11 @@ export default function Dashboard() {
     .slice(0, 4);
 
   return (
-    <main className="min-h-screen flex bg-linear-to-r from-[#f8f7ff] via-[#fffbfb] to-[#fffdf5]">
+    <main className="min-h-screen flex bg-linear-to-r from-[#fdfcff] via-[#fff5f5] to-[#fffdf5]">
 
       {/* Sidebar — SAME AS ACCOUNT */}
      <aside
-  className={`fixed top-0 left-0 h-full bg-white/80 backdrop-blur-md shadow-lg p-3 transition-all duration-300 z-30
+  className={`fixed top-0 left-0 h-full  backdrop-blur-md shadow-lg p-3 transition-all duration-300 z-30
     ${sidebarOpen ? "w-56" : "w-14"} flex flex-col`}
 >
   <div className="flex items-center justify-between mb-4 mt-16">
@@ -189,6 +190,7 @@ export default function Dashboard() {
 
        <div className="ml-10">
          <Footer />
+         <CustomFooter/>
        </div>
       </div>
     </main>
